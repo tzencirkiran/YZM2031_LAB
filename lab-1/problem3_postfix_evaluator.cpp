@@ -31,24 +31,26 @@ int evaluatePostfix(const string& expression) {
     // TODO: Implement postfix evaluation
     // 
     // Hint: Use stringstream to parse the expression
-    // Example:
-    //   stringstream ss(expression);
-    //   string token;
-    //   while (ss >> token) {
-    //       // Process each token
-    //   }
-    //
-    // Hint: Check if token is an operator
-    //   if (token == "+" || token == "-" || token == "*" || token == "/")
-    //
-    // Hint: Convert string to integer
-    //   int num = stoi(token);
-    
     stack<int> s;
-    
-    // Your implementation here
-    
-    return 0;  // Placeholder - return the final result
+    stringstream ss(expression);
+    string token;
+    while (ss >> token) {
+        if (token == "+" || token == "-" || token == "*" || token == "/") {
+            int right = s.top(); s.pop();
+            int left  = s.top(); s.pop();
+            int result = 0;
+            if (token == "+") result = left + right;
+            else if (token == "-") result = left - right;
+            else if (token == "*") result = left * right;
+            else if (token == "/") result = left / right;
+            s.push(result);
+        } 
+        else {
+            int num = stoi(token);
+            s.push(num);
+        }
+    }
+    return s.top();
 }
 
 // Test cases
