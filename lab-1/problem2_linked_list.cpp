@@ -2,8 +2,8 @@
  * YZM2031 - Lab Assignment 1
  * Problem 2: Singly Linked List Implementation
  * 
- * Student Name: [YOUR NAME HERE]
- * Student ID: [YOUR ID HERE]
+ * Student Name: Talha
+ * Student ID: 25018603
  * 
  * Instructions: Implement the TODO sections below
  */
@@ -29,9 +29,20 @@ public:
     // Destructor
     ~LinkedList() {
         // TODO: Free all nodes
+        if (head != nullptr){
+            Node* current = head;
+            while (current != nullptr)
+            {
+                Node* temp = current;
+                current = current->next;
+                delete temp;
+            }
+            head = nullptr;
+            size = 0;
+        }
         // 1. Traverse the list
         // 2. Delete each node
-        // Hint: Save the next pointer before deleting current node
+        // Hint: Save the next pointer before deleting current node, hmm, I wish I had seen this :D, no deal though
         
     }
 
@@ -39,6 +50,10 @@ public:
     void insertFront(int value) {
         // TODO: Implement insertFront
         // 1. Create a new node
+        Node* new_node = new Node(value);
+        new_node->next = head;
+        head = new_node;
+        size++;
         // 2. Set new node's next to current head
         // 3. Update head to new node
         // 4. Increment size
@@ -49,7 +64,20 @@ public:
     void insertBack(int value) {
         // TODO: Implement insertBack
         // 1. Create a new node
+        Node* new_node = new Node(value);
         // 2. If list is empty, set head to new node
+        if (size == 0)
+        {
+            head = new_node;
+        }
+        else {
+            Node* current = head;
+            while (current->next != nullptr) {
+                current = current->next;
+            } // when current's next is nullptr
+            current->next = new_node;
+        }
+        size++;
         // 3. Otherwise, traverse to the last node
         // 4. Set last node's next to new node
         // 5. Increment size
@@ -60,6 +88,21 @@ public:
     void insertAt(int index, int value) {
         // TODO: Implement insertAt
         // 1. Validate index (0 <= index <= size)
+        if (0 <= index || index <= size) {
+            if (index == 0) {
+                insertFront(value);
+            }
+            else {
+                Node* current = head;
+                for (int i = 0; i <= index - 2; i++) { // current stopped at idx-1
+                    current = current->next;
+                }
+                Node* new_node = new Node(value);
+                new_node->next = current->next;
+                current->next = new_node;
+            }
+            size++;
+        }
         // 2. If index is 0, call insertFront
         // 3. Otherwise, traverse to node at index-1
         // 4. Create new node
@@ -72,6 +115,12 @@ public:
     void deleteFront() {
         // TODO: Implement deleteFront
         // 1. Check if list is empty
+        if (size != 0) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+            size--;
+        }
         // 2. Save head pointer
         // 3. Move head to next node
         // 4. Delete old head
@@ -83,6 +132,25 @@ public:
     void deleteBack() {
         // TODO: Implement deleteBack
         // 1. Check if list is empty
+        if (size != 0) {
+            if (size == 1) {
+                delete head;
+                head = nullptr;
+                size--;
+                return;
+            }
+            else {
+                Node* current = head;
+                for (int i = 0; i < size - 2; i++) { // stops at last idx - 1
+                    current = current->next;
+                }
+                Node* last_node = current->next;
+                current->next = nullptr;
+                delete last_node;
+                size--;
+            }
+        }
+        // 
         // 2. If only one node, delete it and set head to nullptr
         // 3. Otherwise, traverse to second-to-last node
         // 4. Delete last node
@@ -95,6 +163,13 @@ public:
     int search(int value) {
         // TODO: Implement search
         // 1. Traverse the list
+        Node* current = head;
+        for (int i = 0; i <= size - 1; i++) {
+            if (current->data == value) {
+                return i;
+            }
+            current = current->next;
+        }
         // 2. Keep track of index
         // 3. If value found, return index
         // 4. If not found, return -1
@@ -103,10 +178,25 @@ public:
     }
 
     // Reverse the list
-    void reverse() {
+    void reverse() { // 10 → 15 → 20 → nullptr to 20 → 15 → 10 → nullptr
         // TODO: Implement reverse
         // 1. Use three pointers: prev, current, next
+        Node* prev, *current, *next;
+        current = head;
+        prev = nullptr;
         // 2. Initialize prev = nullptr, current = head
+        for (int i = 0; i < size; i++) {
+            next = current->next;
+            current->next = prev;
+            prev = current;
+            current = next;
+            if (i == 0) {
+                head = prev;
+            }
+        }
+        head = prev;
+        // BUT THEN DONT WE DONT WE HAVE ONLY 3 NODES LEFT??? ACCORDING TO ARTICLE 4
+        
         // 3. Traverse the list:
         //    - Save next node
         //    - Reverse current node's pointer
