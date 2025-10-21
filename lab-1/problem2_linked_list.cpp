@@ -181,22 +181,18 @@ public:
     void reverse() { // 10 → 15 → 20 → nullptr to 20 → 15 → 10 → nullptr
         // TODO: Implement reverse
         // 1. Use three pointers: prev, current, next
-        Node* prev, *current, *next;
-        current = head;
-        prev = nullptr;
+        Node* prev    = nullptr;
+        Node* current = head;
+        Node* next    = nullptr;
         // 2. Initialize prev = nullptr, current = head
         for (int i = 0; i < size; i++) {
             next = current->next;
             current->next = prev;
             prev = current;
             current = next;
-            if (i == 0) {
-                head = prev;
-            }
         }
         head = prev;
-        // BUT THEN DONT WE DONT WE HAVE ONLY 3 NODES LEFT??? ACCORDING TO ARTICLE 4
-        
+    
         // 3. Traverse the list:
         //    - Save next node
         //    - Reverse current node's pointer
