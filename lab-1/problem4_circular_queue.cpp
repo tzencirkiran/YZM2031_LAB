@@ -2,8 +2,8 @@
  * YZM2031 - Lab Assignment 1
  * Problem 4: Circular Queue for Task Scheduling
  * 
- * Student Name: [YOUR NAME HERE]
- * Student ID: [YOUR ID HERE]
+ * Student Name: Talha
+ * Student ID: 25018603
  * 
  * Instructions: Implement the TODO sections below
  */
@@ -35,35 +35,49 @@ public:
     // Add task to queue (returns false if full)
     bool enqueue(const string& task) {
         // TODO: Implement enqueue
-        // 1. Check if queue is full
-        // 2. If full, return false
+        // 1. Check if queue is full // 2. If full, return false
+        if (count == capacity) {
+            return false;
+        }
+        rearIndex = (rearIndex + 1) % capacity;
+        tasks[rearIndex] = task;
+        count++;
         // 3. Update rearIndex using circular logic: (rearIndex + 1) % capacity
         // 4. Add task at rearIndex
         // 5. Increment count
         // 6. Return true
-        
-        return false;  // Placeholder
+        return true;
     }
 
     // Remove and return task from front
     string dequeue() {
         // TODO: Implement dequeue
         // 1. Check if queue is empty, throw exception if empty
+        if (count == 0) {
+            throw underflow_error("circular queue is empty!");
+        }
+        string task = tasks[frontIndex];
+        frontIndex = (frontIndex + 1) % capacity;
+        count--;
         // 2. Get task at frontIndex
         // 3. Update frontIndex using circular logic: (frontIndex + 1) % capacity
         // 4. Decrement count
         // 5. Return the task
         
-        return "";  // Placeholder
+        return task;  // Placeholder
     }
 
     // View next task without removing
     string front() const {
-        // TODO: Implement front
+        // TODO: Implement front 
+        if (count == 0) {
+            throw underflow_error("circular queue is empty!");
+        }
         // 1. Check if queue is empty, throw exception if empty
+        string task = tasks[frontIndex];
         // 2. Return task at frontIndex
         
-        return "";  // Placeholder
+        return task;  // Placeholder
     }
 
     // Check if empty

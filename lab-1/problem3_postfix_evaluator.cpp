@@ -2,8 +2,8 @@
  * YZM2031 - Lab Assignment 1
  * Problem 3: Stack-Based Expression Evaluator
  * 
- * Student Name: [YOUR NAME HERE]
- * Student ID: [YOUR ID HERE]
+ * Student Name: Talha
+ * Student ID: 25018603
  * 
  * Instructions: Implement the TODO sections below
  */
