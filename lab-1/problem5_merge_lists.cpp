@@ -42,8 +42,25 @@ struct Node {
 Node* mergeSortedLists(Node* list1, Node* list2) {
     // TODO: Implement merge function
     // You can use either iterative or recursive approach
-    
-    return nullptr;  // Placeholder
+    int iter = 0;
+    Node* head;
+    Node dummy(0);
+    Node* tail = &dummy;
+    Node* leftover_list;
+    while (list1 != nullptr && list2 != nullptr) // if both are going the way
+    {  
+        if (list1->data <= list2->data) {
+            tail->next = list1;
+            list1 = list1->next;
+        } 
+        else {
+            tail->next = list2;
+            list2 = list2->next;
+        }
+        tail = tail->next;
+    } // if one of them consumed
+    tail->next = (list1 ? list1 : list2);
+    return dummy.next;
 }
 
 // ============================================================================
