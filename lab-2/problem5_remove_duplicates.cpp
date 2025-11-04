@@ -9,21 +9,23 @@ string removeDuplicates(const string& s) {
     // Use a stack to efficiently remove adjacent duplicate characters
     stack<char> dedup;
     string dedup_str;
+    char checkout;
 
     // Algorithm:
     // 1. Iterate through each character in the string
-    dedup.push(0);
-    for (uint i = 1; i < s.size(); i++) {
-        if (!dedup.empty() && dedup.top() == s[i]) {
+    for (uint i = 0; i < s.size(); i++) {
+        if (!dedup.empty() && (dedup.top() == s[i] || checkout == s[i])) {
             dedup.pop();
+            checkout = s[i];
         }
         else {
             dedup.push(s[i]);
+            checkout = s[i];
         }
     }
     uint dedup_size = dedup.size();
     for (uint i = 0; i < dedup_size; i++) {
-        dedup_str += dedup.top();
+        dedup_str = dedup.top() + dedup_str;
         dedup.pop();
     }
 

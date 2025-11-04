@@ -8,21 +8,20 @@ vector<int> maxSlidingWindow(vector<int>& nums, int k) {
     vector<int> result;
     deque<int> dq;  // Store indices, not values!
     // TODO: Implement the sliding window maximum algorithm
-    int current_max = 0;
 
-    for (int i = 0; i < result.size()-(k+1); i++) {
-        int window_sum = 0;
-        for (int num = 0; num < k; num++) {
-            window_sum += nums[i + num];
+    for (uint i = 0; i < result.size()-(k-1); i++) {
+        if (!dq.empty() && nums[i] >= nums[dq.front()]) {
+            dq.push_front(i);
         }
-        if (window_sum > current_max) {
-            int ref_num = nums[i];
-            for (int num = 1; num < k; num++) {
-                dq.pop_back();
-                if (nums[i + num] > ref_num){}
-            }
+        else {
+            dq.push_back(i);
         }
         
+        dq.push_front(i);
+        if (dq.size() == k) {
+            result[i-k+1] = dq.front();
+            dq.pop_back();
+        }
     }
     // Hint: Maintain deque in decreasing order of values
     // Hint: Store indices in the deque, not values
