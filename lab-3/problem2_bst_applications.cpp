@@ -9,7 +9,7 @@ struct TreeNode {
     TreeNode *right;
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 };
-
+vector<int> preorder(TreeNode* root);
 // ======================================================================================
 // PROBLEM 2: BST Applications
 // ======================================================================================
@@ -17,15 +17,17 @@ struct TreeNode {
 /*
     1. kthSmallest
     
-    Given the root of a binary search tree, and an integer k, return the kth smallest value (1-indexed) 
+    Given the root of a **binary search tree**, and an integer k, return the kth smallest value (1-indexed) 
     of all the values of the nodes in the tree.
 */
 
 int kthSmallest(TreeNode* root, int k) {
     // TODO: Implement this function
-    
-    return 0;
+    vector<int> ordered_tree = preorder(root);
+    return ordered_tree.at(k);;
 }
+
+
 
 /*
     2. LCA (Lowest Common Ancestor)

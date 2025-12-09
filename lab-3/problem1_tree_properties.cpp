@@ -15,18 +15,61 @@ struct TreeNode {
 // ======================================================================================
 // PROBLEM 1: Tree Properties
 // ======================================================================================
-
+int subtree_count(TreeNode* node);
+int height(queue<TreeNode*>& bsf);
+void preorder(TreeNode* node, queue<TreeNode*>& bsf);
 /*
     1. isComplete(TreeNode* root)
     
     Check if the binary tree is a complete binary tree.
 */
 bool isComplete(TreeNode* root) {
-    // TODO: Implement this function
-    
-    return false;
+    if (root == nullptr) return true;
+    queue<TreeNode*> bsf;
+    preorder(root, bsf);
+    int n = bsf.size();
+    int h = height(bsf);
+    for (int i = 0; i <= pow(2,h) - 1; i++) {
+        bsf.pop();
+    }
+    bool seen_null = false;
+    while (!bsf.empty()) {
+        if (bsf.front() == nullptr) {
+            if (seen_null == true) {
+                return false;
+            }
+            else {
+                seen_null = true;
+                bsf.pop();
+            }
+        }
+        else {
+            bsf.pop();
+        }
+    }
+    return true;
 }
 
+void preorder(TreeNode* root, queue<TreeNode*>& bsf) {
+    if (root == nullptr) return; // Base case
+    // Pre-order: node, left, right
+    bsf.push(root);
+    preorder(root->left, bsf);
+    preorder(root->right, bsf);
+}
+
+int subtree_count(TreeNode* node) {
+    if (node == nullptr) {return 0;}
+    if (node->left != nullptr && node->right != nullptr) {
+        return 2;
+    }
+    else if (node->left != nullptr || node->right != nullptr) {
+        return 1;
+    }
+    else { // if no leaf node left return height
+        return 0;
+    }
+}
 /*
     2. isBalanced(TreeNode* root)
     
@@ -34,11 +77,41 @@ bool isComplete(TreeNode* root) {
 */
 
 // Helper function to calculate height. You may or may not need this.
+int height(queue<TreeNode*>& bsf) {
+    int n = bsf.size();
+    // 2^h - 1 <= n < 2^(h+1) - 1
+    int h = 0;
+    while (true) {
+        if ((pow(2, h) - 1 <= n) && pow(2, h+1) - 1 > n) {
+            return h;
+        }
+        else {
+            h++;
+        }
+    }
+}
+/*
 int height(TreeNode* node) {
     // TODO: Implement this function (optional helper)
-    
-    return 0;
+    if (node == nullptr) {return 0;}
+    int h = 0;
+    if (node->left != nullptr && node->right != nullptr) {
+        h += 1;
+        height(node->left);
+        height(node->right);
+    }
+    else if (node->left != nullptr && node->right == nullptr) {
+        h += 1;
+        height(node->left);
+    }
+    else if (node->left == nullptr && node->right != nullptr) {
+        h += 1;
+        height(node->right);
+    }
+
+    return h;
 }
+*/
 
 bool isBalanced(TreeNode* root) {
     // TODO: Implement this function
@@ -46,11 +119,13 @@ bool isBalanced(TreeNode* root) {
     return false;
 }
 
+
 /*
     3. maxWidth(TreeNode* root)
     
     Given the root of a binary tree, return the maximum width of the given tree.
 */
+// 2^n(r) + n(l) - n(r) n for tree level
 int maxWidth(TreeNode* root) {
     // TODO: Implement this function
     
