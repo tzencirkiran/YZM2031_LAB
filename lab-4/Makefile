@@ -12,16 +12,21 @@ all: $(STUDENT_TARGETS)
 solutions: $(SOLUTION_TARGETS)
 
 # Compile student templates
-problem1_min_heap: problem1_min_heap.cpp
+
+# Student templates use the provided problemX.cpp files
+problem1_min_heap: problem1.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
-problem2_heap_sort: problem2_heap_sort.cpp
+
+problem2_heap_sort: problem2.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
-problem3_kth_largest: problem3_kth_largest.cpp
+
+problem3_kth_largest: problem3.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
-problem4_sorting_analysis: problem4_sorting_analysis.cpp
+
+problem4_sorting_analysis: problem4.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
 # Compile solutions (for instructor verification)
