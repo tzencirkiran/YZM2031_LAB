@@ -16,43 +16,37 @@ private:
     int left(int i) { return 2*i+1; }
     int right(int i) { return 2*i+2; }
 
-    void heapify(int i) {
-        // i == 0, assumes min element removed and replaced with the last element
-        if (i == 0) { // perculate down, i for tracking replaced last node (after deleteMin)
-            int idx_max = heap.size() - 1;
-            int temp;
-            while (i < idx_max && (heap[i] > left(i) || heap[i] > right(i))) {
-                if (right(i) < left(i)) {
-                    temp = heap[i];
-                    heap[right(i)] = temp;
-                    heap[i] = right(i);
-                    i = right(i);
-                }
-                else {
-                    temp = heap[i];
-                    heap[left(i)] = temp;
-                    heap[i] = left(i);
-                    i = left(i);
-                }
-
+    void heapify(int i) { // perculate down
+        int idx_max = heap.size() - 1;
+        int temp;
+        while (i < idx_max && (heap[i] > left(i) || heap[i] > right(i))) {
+            if (right(i) < left(i)) {
+                temp = heap[right(i)];
+                heap[right(i)] = heap[i];
+                heap[i] = temp;
+                i = right(i);
             }
-        }
-        else {
-            while (i > 0 && heap[parent(i)] > heap[i]) // i is not 0 (not root), i for tracking new value
-            {
-                int temp = heap[i];
-                heap[i] = heap[parent(i)]; // changing inserted and parnt if new<parent
-                i = parent(i); // i updated with its parent's idx due to replacement
+            else {
+                temp = heap[left(i)];
+                heap[left(i)] = heap[i];
+                heap[i] = temp;
+                i = left(i);
             }
         }
     }
+    
 
 public:
     void insert(int val) {
-        // Implement this
         heap.push_back(val);
-        int i = heap.size() - 1; // i for keeping track of where new value is
-        heapify(i);
+        int i = heap.size() - 1;
+        while (heap[parent(i)] > heap[i]) // i is not 0 (not root), i for tracking new value
+        {
+            int temp = heap[i];
+            heap[i] = heap[parent(i)]; // changing inserted and parnt if new<parent
+            heap[parent(i)] = temp;
+            i = parent(i); // i updated with its parent's idx due to replacement
+        }
     }
 
     int extractMin() {
