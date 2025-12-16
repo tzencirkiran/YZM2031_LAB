@@ -8,11 +8,32 @@
 using namespace std;
 
 void heapify(vector<int>& arr, int n, int i) {
-    // Implement this
+    int largest = i;
+    int l = 2 * i + 1; // Left Child
+    int r = 2 * i + 2; // Right Child
+    if (l < n && arr[l] > arr[largest]) 
+        largest = l;
+    if (r < n && arr[r] > arr[largest]) 
+        largest = r;
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
+    }
+
 }
 
 void heapSort(vector<int>& arr) {
     // Implement this
+    int n = arr.size();
+    // Build heap (rearrange array)
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(arr, n, i);
+    }
+    // Extract element from heap one by one
+    for (int i = n - 1; i > 0; i--) {
+        swap(arr[0], arr[i]); // Move root to end
+        heapify(arr, i, 0);
+    }
 }
 
 void printArray(vector<int>& arr) {
