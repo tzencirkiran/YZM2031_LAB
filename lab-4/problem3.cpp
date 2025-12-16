@@ -10,7 +10,33 @@ using namespace std;
 
 int findKthLargest(vector<int>& nums, int k) {
     // Implement this
-    return -1;
+    queue<int> buffer;
+    for (int num : nums) {
+        if (buffer.size() < k) {
+            if (buffer.empty()) 
+                buffer.push(num);
+            else if (num < buffer.back()) {
+                buffer.push(num);
+            }
+        }
+        else if (num > buffer.back()) { // if k-th largest add to buffer, else ignore
+            queue<int> buffer_list;
+            for (int i = 0; i < k-2; i++) { // k-2!
+                if (num < buffer.front()) {
+                    buffer_list.push(buffer.front());
+                    buffer.pop();
+                    if (buffer_list.size() == k-1) {
+                        buffer_list.push(num);
+                        break;
+                    }
+                }
+            }
+            buffer.swap(buffer_list);
+        }
+    }
+
+
+    return buffer.back();
 }
 
 int main() {
