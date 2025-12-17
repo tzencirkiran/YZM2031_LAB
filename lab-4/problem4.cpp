@@ -34,9 +34,24 @@ struct Bid {
     int timestamp;  // Lower = arrived earlier
 };
 
+
 void sortAuctionBids(vector<Bid>& bids) {
-    // TODO: Implement the appropriate sorting algorithm
-    // 
+    // TODO: Implement the appropriate sorting algorithm (Inserion Sort)
+    int n = bids.size();
+    for (int i = 0; i < n; i++) { // iterating over bids 
+        Bid i_bid = bids[i];
+        int j = i - 1;
+
+        while (j >= 0 && (bids[j].amount < i_bid.amount || 
+        (bids[j].amount == i_bid.amount && bids[j].timestamp > bids[i].timestamp))) 
+        // ith element compared against prior i-1 elements
+        {
+            bids[j + 1] = bids[j];
+            j--;
+        }
+        bids[j + 1] = i_bid;
+    }
+     
 }
 
 // ============================================================================
