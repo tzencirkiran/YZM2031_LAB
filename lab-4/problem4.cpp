@@ -14,6 +14,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <math.h>
 
 using namespace std;
 
@@ -69,7 +70,19 @@ void sortAuctionBids(vector<Bid>& bids) {
 
 void sortSensorReadings(vector<int>& readings) {
     // TODO: Implement the appropriate sorting algorithm
-    //
+    // Insertion Sort -> Best Case O(N), worst case O(N^2), our case is nearly sorted and O(1) space
+    int n = readings.size();
+    for (int i = 0; i < n; i++) { // iterating over bids 
+        int data = readings[i];
+        int j = i - 1;
+
+        while (j >= 0 && readings[j] > data)
+        {
+            readings[j + 1] = readings[j];
+            j--;
+        }
+        readings[j + 1] = data;
+    }
 }
 
 // ============================================================================
@@ -82,8 +95,42 @@ void sortSensorReadings(vector<int>& readings) {
 // - Must be faster than O(n log n) comparison-based sorts
 // ============================================================================
 
+vector<int> generate_gap_idx(int n) {
+    int h;
+    vector<int> gaps;
+    for (int k = 0; k < n; k++) {
+        if (k%2 == 0) {
+            h = 9 * pow(2, k) - 9 * pow(2, k/2) + 1;
+        }
+        else {
+            h = 9 * pow(2, k) - 9 * pow(2, k/2) + 1;
+        }
+        gaps.push_back(h);
+    }
+    return gaps; // reverse order gap numbers
+}
+
 void sortStudentGrades(vector<int>& grades) {
-    // TODO: Implement the appropriate sorting algorithm
+    // TODO: Implement the appropriate sorting algorithm (Sedgewick's Gap)
+    int n = grades.size();
+    vector<int> gaps = generate_gap_idx(n);
+    int k = gaps.size();
+
+    for (int j = k; j > 0; j--) { // for each gap value
+        int gap = gaps[j];
+        for (int i = gap; i < n; i=i+gap) { // for each group of grouped i s (indices)
+            int grade = grades[i];
+            int m = i - gap;
+
+            while (m >= 0 && grades[i - gap] > grade)
+            {
+                grades[m + gap] = grades[m];
+                m = m - gap;
+            }
+            grades[m + gap] = grade;
+        }
+
+    }
 }
 
 // ============================================================================
