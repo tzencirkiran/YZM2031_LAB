@@ -68,7 +68,24 @@ public:
         // Implement this
         // TODO: # of unique parents ie represantives would give # disjoint sets,
         // I'll iterate over the parent list with find function and then count the unique parents
-        return 0;  // placeholder
+        int n_set = 0;
+        vector<int> unique_roots;
+        bool is_unique = true;
+        for (int i = 0; i < parent.size(); i++) {
+            int j = 0;
+            while (is_unique == true && j < n_set) {
+                if (find(parent[i]) == unique_roots[j]) {
+                    is_unique=false;
+                }
+                j++;
+            }
+            if (is_unique) {
+                unique_roots.push_back(parent[i]);
+                n_set++;
+            }
+            else is_unique = true;
+        }
+        return n_set;  // placeholder
     }
     
     // Debug: print the parent array
