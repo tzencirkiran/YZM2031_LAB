@@ -29,19 +29,38 @@ public:
     
     int find(int x) {
         // Implement with path compression
-        return x;  // placeholder
+        if (x != parent[x])
+            parent[x] = find(parent[x]);
+        return parent[x];
     }
     
     // Connect two data centers
     // Remember to update numNetworks when two different networks merge!
     void connect(int x, int y) {
         // Implement this
+        int root_x = find(x);
+        int root_y = find(y);
+
+        if (root_x == root_y) return; // do nothing
+        
+        // assign lower ranked root's parent to the higher ranked one's
+        if (rank_[root_x] < rank_[root_y]) {
+            parent[root_x] = root_y;
+        }
+        else if (rank_[root_x] > rank_[root_y]) {
+            parent[root_y] = root_x;
+        }
+        else {
+            parent[root_y] = root_x;
+            rank_[root_x] += 1; 
+        }
+        numNetworks--; 
     }
     
     // Query if two data centers can communicate
     bool canCommunicate(int x, int y) {
         // Implement this
-        return false;  // placeholder
+        return find(x) == find(y);
     }
     
     // Get the number of separate networks
