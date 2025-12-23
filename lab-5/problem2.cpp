@@ -29,25 +29,45 @@ public:
     // Find the representative (root) of the set containing x
     // Implement PATH COMPRESSION: make nodes point directly to root
     int find(int x) {
-        // Implement this
-        return x;  // placeholder
+        // recursive implementation of find, recursively assigns all children to the parent
+        if (x != parent[x])
+            parent[x] = find(parent[x]);
+        return parent[x];  
     }
     
     // Unite the sets containing x and y
     // Implement UNION BY RANK: attach smaller tree under larger tree
     void unite(int x, int y) {
-        // Implement this
+        int root_x = find(x);
+        int root_y = find(y);
+
+        if (root_x == root_y) return; // do nothing
+        
+        // assign lower ranked root's parent to the higher ranked one's
+        if (rank_[root_x] < rank_[root_y]) {
+            parent[root_x] = root_y;
+        }
+        else if (rank_[root_x] > rank_[root_y]) {
+            parent[root_y] = root_x;
+        }
+        else {
+            parent[root_y] = root_x;
+            rank_[root_x] += 1; 
+        }
     }
     
     // Check if x and y are in the same set
     bool connected(int x, int y) {
         // Implement this
-        return false;  // placeholder
+        if (find(x) == find(y)) return true;
+        else return false;  // placeholder
     }
     
     // Return the number of disjoint sets
     int countSets() {
         // Implement this
+        // TODO: # of unique parents ie represantives would give # disjoint sets,
+        // I'll iterate over the parent list with find function and then count the unique parents
         return 0;  // placeholder
     }
     
