@@ -31,10 +31,12 @@ void countingSort(vector<int>& arr, int maxVal) {
             }
         }
     }
-    for (int i = 0; i <= maxVal; i++) {
-        for (int n = 0; n < counts[i]; n++) {
-            arr[n] = i;
+    int track_idx = 0;
+    for (int i = 0; i <= maxVal; i++) { // for each value in the range
+        for (int n = 0; n < counts[i]; n++) {   // add i
+            arr[track_idx + n] = i;
         }
+        track_idx = track_idx + counts[i] + 1;
     }
 }
 
