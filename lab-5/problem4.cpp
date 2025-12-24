@@ -21,8 +21,21 @@ using namespace std::chrono;
 // Works well when range of values (max - min) is small
 // Time: O(N + K) where K is the range
 // Space: O(K) for the count array
-void countingSort(vector<int>& arr, int maxVal) {
-    // Implement this
+void countingSort(vector<int>& arr, int maxVal) { 
+    // Implement this count[i] = number of elements in A equal to i
+    vector<int> counts(maxVal+1, 0);
+    for (int i = 0; i <= maxVal; i++) { // for each possible value in range
+        for (int j = 0; j < arr.size(); j++) { // # of i in the whole arr
+            if (i == arr[j]) {
+                counts[i]++;
+            }
+        }
+    }
+    for (int i = 0; i <= maxVal; i++) {
+        for (int n = 0; n < counts[i]; n++) {
+            arr[n] = i;
+        }
+    }
 }
 
 // Counting Sort for a specific digit (used by Radix Sort)
