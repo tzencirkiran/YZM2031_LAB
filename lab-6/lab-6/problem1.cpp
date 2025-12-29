@@ -11,6 +11,7 @@
 #include <vector>
 #include <list>
 #include <string>
+#include <math.h>
 
 using namespace std;
 
@@ -24,7 +25,15 @@ private:
     // Hash function for strings
     int hash(const string& key) {
         // TODO: Implement polynomial rolling hash
-        return 0;  // placeholder
+        int h_val = 0;
+        int prime_pow = 0;
+        const int MODULOS = 1e-7;
+        const int PRIME = 31;
+        for (char c : key) {
+            h_val += (int(c)+ pow(PRIME, prime_pow));
+            prime_pow++;
+        }
+        return h_val;  // placeholder
     }
 
 public:
@@ -36,6 +45,19 @@ public:
     // If shortCode already exists, update the longUrl
     void insert(const string& shortCode, const string& longUrl) {
         // Implement this
+        for (int i = 0; i < numElements && numElements <= tableSize; i++) {
+           if (table[i].front().first == shortCode) {
+                pair<string, string> inserted_pair;
+                inserted_pair.first = shortCode; inserted_pair.second = longUrl;
+                table[i].push_back(inserted_pair);
+           }
+        }
+        if (numElements < tableSize) {
+            pair<string, string> inserted_pair;
+            inserted_pair.first = shortCode; inserted_pair.second = longUrl;
+            table.emplace_back(1, inserted_pair);
+            numElements++;
+        }
     }
     
     // Find the long URL for a given short code
