@@ -40,7 +40,15 @@ private:
     // If searching, returns -1 if not found
     int probe(int key, bool isSearching) {
         // TODO: Implement linear probing
-        return -1;  // placeholder
+        int idx = hash(key);
+        while (occupied[idx] == true) {
+            if (isSearching == true && table[idx].id == key) {
+                return idx;
+            }
+            idx++;
+        }
+        if (isSearching) return -1;
+        else return idx;  
     }
 
 public:
@@ -54,20 +62,41 @@ public:
     // If student ID already exists, update the record
     void insert(int id, const string& name, double gpa) {
         // TODO: Implement insertion with linear probing
+        int id_place = probe(id, true);
+        if (id_place == -1) {
+            int idx = probe(id, false); 
+            table[idx] = Student(id, name, gpa);
+            occupied[idx] = true;
+            numElements++;
+        }
+        else {
+            table[id_place].id = id;
+            table[id_place].name = name;
+            table[id_place].gpa = gpa;
+        }
+        
     }
     
     // Find a student by ID
     // Returns pointer to student if found, nullptr if not found
     Student* find(int id) {
         // Implement this
-        return nullptr;  // placeholder
+        int id_place = probe(id, true);
+        if (id_place == -1) return nullptr;
+        else if (!deleted[id_place]) {
+            return &table[id_place];
+        }
+        else return nullptr;
     }
     
     // Remove a student by ID (lazy deletion)
     // Return true if found and removed, false if not found
     bool remove(int id) {
         // TODO: Implement lazy deletion
-        return false;  // placeholder
+        int id_place = probe(id, true);
+        if (id_place == -1) return false;
+        else deleted[id_place] = true;
+        return true;  // placeholder
     }
     
     // Get current load factor
