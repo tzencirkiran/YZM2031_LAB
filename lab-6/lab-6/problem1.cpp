@@ -24,16 +24,21 @@ private:
     
     // Hash function for strings
     int hash(const string& key) {
-        // TODO: Implement polynomial rolling hash
-        int h_val = 0;
-        int prime_pow = 0;
-        const int MODULOS = 1e-7;
-        const int PRIME = 31;
-        for (char c : key) {
-            h_val += (int(c)+ pow(PRIME, prime_pow));
-            prime_pow++;
+        static constexpr int64_t MOD = 1000000007LL;
+        static constexpr int64_t P = 31LL;
+
+        int64_t h = 0;
+        int64_t p_pow = 1;
+
+        for (unsigned char c : key) {
+            // Map char to a positive number.
+            int64_t x = (int64_t)c + 1;
+
+            h = (h + x * p_pow) % MOD;
+            p_pow = (p_pow * P) % MOD;
         }
-        return h_val;  // placeholder
+
+        return (int)h;
     }
 
 public:
@@ -45,33 +50,78 @@ public:
     // If shortCode already exists, update the longUrl
     void insert(const string& shortCode, const string& longUrl) {
         // Implement this
-        for (int i = 0; i < numElements && numElements <= tableSize; i++) {
-           if (table[i].front().first == shortCode) {
-                pair<string, string> inserted_pair;
-                inserted_pair.first = shortCode; inserted_pair.second = longUrl;
-                table[i].push_back(inserted_pair);
-           }
+        int idx = hash(shortCode) % tableSize;
+        if (table[idx].empty()) {
+            table[idx].push_back({shortCode, longUrl});
         }
-        if (numElements < tableSize) {
-            pair<string, string> inserted_pair;
-            inserted_pair.first = shortCode; inserted_pair.second = longUrl;
-            table.emplace_back(1, inserted_pair);
+        else {
+            int bucket_size = table[idx].size();
+            list<pair<string, string>> it_list;
+            for (int i = 0; i < bucket_size; i++) {
+                if (table[idx].front().first != shortCode) {
+                    it_list.push_back(table[idx].front());
+                    table[idx].pop_front();
+                }
+                else { // if shortcode exists
+                    table[idx].front() = {shortCode, longUrl};
+                    table[idx].emplace_front(it_list);
+                    numElements++;
+                    return;
+                }
+            }
+            table[idx].emplace_front(it_list);
+            // if not returned above, then shortcode never occured in the bucket
+            table[idx].push_back({shortCode, longUrl});
             numElements++;
         }
+        
     }
     
     // Find the long URL for a given short code
     // Return empty string if not found
     string find(const string& shortCode) {
         // Implement this
-        return "";  // placeholder
+        int idx = hash(shortCode) % tableSize;
+        int bucket_size = table[idx].size();
+        list<pair<string, string>> it_list;
+        for (int i = 0; i < bucket_size; i++) {
+            if (table[idx].front().first != shortCode) {
+                it_list.push_back(table[idx].front());
+                table[idx].pop_front();
+            }
+            else { // if shortcode exists
+                string long_url = table[idx].front().second;
+                table[idx].emplace_front(it_list);
+                return long_url;
+            }
+        }
+        table[idx].emplace_front(it_list);
+        // if not returned above, then shortcode never occured in the bucket
+        return "";  
     }
     
     // Remove a mapping by short code
     // Return true if found and removed, false if not found
     bool remove(const string& shortCode) {
         // Implement this
-        return false;  // placeholder
+        int idx = hash(shortCode) % tableSize;
+        int bucket_size = table[idx].size();
+        list<pair<string, string>> it_list;
+        for (int i = 0; i < bucket_size; i++) {
+            if (table[idx].front().first != shortCode) {
+                it_list.push_back(table[idx].front());
+                table[idx].pop_front();
+            }
+            else { // if shortcode exists
+                table[idx].pop_front();
+                table[idx].emplace_front(it_list);
+                numElements--;
+                return true;
+            }
+        }
+        table[idx].emplace_front(it_list);
+        // if not returned above, then shortcode never occured in the bucket
+        return false; 
     }
     
     // Get current load factor
