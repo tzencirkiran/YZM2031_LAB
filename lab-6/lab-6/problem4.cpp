@@ -25,19 +25,27 @@ public:
         int idx = 0;
         for (int num : nums) {
             int comp = target - num;
-            if (num == comp) {
+            
+
+            auto it_val = val_comp.find(num);
+            if (comp == num && it_val == val_comp.end()) {
                 val_comp[num] = {idx, idx};
                 continue;
             }
-            auto& comp_pair = val_comp[comp];
-            if (comp_pair == pair{0, 0}) {  // if complement's pair doesnt have pair
-                comp_pair = {-1, idx};  // we haven't found comp yet in the vector but so idx=-1
-                val_comp[comp] = comp_pair;
-            }                           // but we assign its complement which is our num's idx
-            else {                      // else we already have the complement so we update our num's idx
-                comp_pair.second = idx;
-                val_comp[num] = {idx, comp_pair.first};
-                return val_comp[num];
+            else if (it_val == val_comp.end()) {
+                val_comp[num] = {idx, -1}; // assigning default value to num in the table
+            }
+
+            auto it_comp = val_comp.find(comp);
+            
+
+            if (it_comp == val_comp.end()) {
+                val_comp[num] = {idx, -1};
+                val_comp[comp] = {-1, comp};
+            }
+            else {
+                val_comp[num].second = val_comp[comp].first;
+                val_comp[comp].second = val_comp[num].first;
             }
             idx++;
         }
