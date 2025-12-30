@@ -21,37 +21,34 @@ public:
     // Time: O(N), Space: O(N)
     pair<int, int> twoSum(const vector<int>& nums, int target) {
         // TODO: Implement using hash map for O(N) solution
-        unordered_map<int, pair<int, int>> val_comp; // int for num, pair for idx of itself and complement
-        int idx = 0;
-        for (int num : nums) {
-            int comp = target - num;
-            
+        unordered_map<int, pair<int, int>> num_comp; // int for num, pair for idx of itself and complement
 
-            auto it_val = val_comp.find(num);
-            if (comp == num && it_val == val_comp.end()) {
-                val_comp[num] = {idx, idx};
-                idx++;
+        for (int idx = 0; idx < nums.size(); idx++) {
+            int num = nums[idx];
+            pair<int, int> num_pair = {idx, -1}; // indice pair of num
+
+            int complement = target - num;
+            if (num_comp.find(num) != num_comp.end()) { // if num already in the table
+                auto comp_it = num_comp.find(complement);
+                if (comp_it == num_comp.end()) {    // if complement is not yet in the table, assign default
+                    num_comp[complement] = {-1, num_comp[num].first};
+                }
+                else if (num_comp[complement].first == -1) {
+                    continue;   // iterate until we find complement in the nums, comp already exists in table
+                }
+                else {  // if we have complement in table update both comp_pair and num_pair
+                    if (num_comp[num].first == -1) num_comp[num].first = idx;
+                    num_comp[num].second = num_comp[complement].first;  
+                    num_comp[complement].second = num_comp[num].first;
+                    return num_comp[num];
+                }
+            }
+            else {  // initialize num in the table as key with {idx, -1}
+                num_comp[num] = num_pair;
+                idx--;
                 continue;
             }
-            else if (it_val == val_comp.end()) {
-                val_comp[num] = {idx, -1}; // assigning default value to num in the table
-            }
-
-            auto it_comp = val_comp.find(comp);
             
-
-            if (it_comp == val_comp.end()) {
-                val_comp[num] = {idx, -1};
-                val_comp[comp] = {-1, idx};
-            }
-            else {
-                val_comp[num].second = val_comp[comp].first;
-                val_comp[comp].second = val_comp[num].first;
-            }
-
-            if (val_comp[num].first == -1 || val_comp[num].second == -1)
-                idx++;
-            else return val_comp[num];
         }
         
         return {-1, -1};  // placeholder
