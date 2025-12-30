@@ -45,6 +45,16 @@ public:
     int findDuplicates(const vector<File>& files) {
         // TODO: Implement duplicate detection using hash map
         int dup_groups = 0;
+        /*
+         Solved the problem using 32gbs of ram with other tasks of my laptop. 
+         Reason is I created a vector of size MOD, I might solve it by using pseudo empty files
+         in the vector. My logic is: I might create a special type of file which specifies 
+         how many empty slots are there between two hashed files, some kind of sparse vector. 
+         When a new file added between these files then I can insert the new hashed file and 
+         then create one new empty slot file.
+
+         As of now space complexity O(MOD), time complexity O(N)
+        */
         vector<list<File>> hash_groups(MOD);
         for (File f : files) {
             long long hash_val = hashContent(f.content);
