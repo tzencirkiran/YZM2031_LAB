@@ -21,18 +21,19 @@ private:
     // Generate a signature for a word that identifies its anagram group
     string getSignature(const string& word) {
         // TODO: Implement signature generation
-        string word_cpy = word;
-        sort(word_cpy.begin(), word_cpy.end());
-
-        int i = 0;
-        string signature = "";
-        while (i < word_cpy.size()) {
-            int first_occur = word_cpy.find_first_of(word_cpy[i]);
-            int last_occur = word_cpy.find_last_of(word_cpy[i]);
-            signature = signature + word_cpy[i] + to_string(last_occur-first_occur+1);
-            i = last_occur+1;
+        int counts[26] = {0};
+        for (char c : word) {
+            counts[c - 'a']++;
         }
-        return signature;  // placeholder
+
+        string sig;
+        for (int i = 0; i < 26; i++) {
+            if (counts[i]) {
+                sig.push_back(char('a' + i));
+                sig += to_string(counts[i]);
+            }
+        }
+        return sig;
     }
 
 public:
@@ -47,7 +48,7 @@ public:
             string signature = getSignature(w);
             sign_groups[signature].push_back(w);
         }
-        for (auto it = sign_groups.begin(); it != ++sign_groups.end(); it++) {
+        for (auto it = sign_groups.begin(); it != sign_groups.end(); ++it) {
             anagram_groups.push_back(it->second);
         }
         return anagram_groups;  // placeholder
