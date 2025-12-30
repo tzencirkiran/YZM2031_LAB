@@ -16,11 +16,32 @@ using namespace std;
 
 class TwoSumSolver {
 public:
-    // Find two indices whose values sum to target
+    // Find two indices whose comp_pairs sum to target
     // Return {-1, -1} if no solution exists
     // Time: O(N), Space: O(N)
     pair<int, int> twoSum(const vector<int>& nums, int target) {
         // TODO: Implement using hash map for O(N) solution
+        unordered_map<int, pair<int, int>> val_comp; // int for num, pair for idx of itself and complement
+        int idx = 0;
+        for (int num : nums) {
+            int comp = target - num;
+            if (num == comp) {
+                val_comp[num] = {idx, idx};
+                continue;
+            }
+            auto& comp_pair = val_comp[comp];
+            if (comp_pair == pair{0, 0}) {  // if complement's pair doesnt have pair
+                comp_pair = {-1, idx};  // we haven't found comp yet in the vector but so idx=-1
+                val_comp[comp] = comp_pair;
+            }                           // but we assign its complement which is our num's idx
+            else {                      // else we already have the complement so we update our num's idx
+                comp_pair.second = idx;
+                val_comp[num] = {idx, comp_pair.first};
+                return val_comp[num];
+            }
+            idx++;
+        }
+        
         return {-1, -1};  // placeholder
     }
     
@@ -38,7 +59,7 @@ void printResult(const pair<int, int>& result, const vector<int>& nums, int targ
         cout << "  No solution found." << endl;
     } else {
         cout << "  Indices: [" << result.first << ", " << result.second << "]" << endl;
-        cout << "  Values: " << nums[result.first] << " + " << nums[result.second] 
+        cout << "  comp_pairs: " << nums[result.first] << " + " << nums[result.second] 
              << " = " << target << endl;
     }
 }
@@ -67,7 +88,7 @@ int main() {
     cout << "Expected: [1, 2] (2 + 4 = 6)" << endl;
     
     // Test 3: Same element twice (but different indices)
-    cout << "\n--- Test 3: Duplicate Values ---" << endl;
+    cout << "\n--- Test 3: Duplicate comp_pairs ---" << endl;
     vector<int> nums3 = {3, 3};
     int target3 = 6;
     cout << "Array: [3, 3], Target: " << target3 << endl;
