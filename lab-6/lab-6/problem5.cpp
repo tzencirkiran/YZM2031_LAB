@@ -57,7 +57,10 @@ public:
     // Check if two words are anagrams
     bool areAnagrams(const string& word1, const string& word2) {
         // TODO: Implement anagram check
-        return false;  // placeholder
+        if (getSignature(word1) == getSignature(word2)) {
+            return true;
+        }
+        else return false;  
     }
 };
 
