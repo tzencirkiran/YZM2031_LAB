@@ -30,6 +30,7 @@ public:
             int complement = target - num;
             if (num_comp.find(num) != num_comp.end()) { // if num already in the table
                 auto comp_it = num_comp.find(complement);
+                
                 if (comp_it == num_comp.end()) {    // if complement is not yet in the table, assign default
                     num_comp[complement] = {-1, num_comp[num].first};
                 }
@@ -38,6 +39,11 @@ public:
                 }
                 else {  // if we have complement in table update both comp_pair and num_pair
                     if (num_comp[num].first == -1) num_comp[num].first = idx;
+                    if (num_comp[num].first != idx && num == complement) {
+                        num_comp[num].second = idx;
+                        return num_comp[num];
+                    } 
+
                     num_comp[num].second = num_comp[complement].first;  
                     num_comp[complement].second = num_comp[num].first;
                     if (num_comp[num].first == num_comp[num].second) continue;
