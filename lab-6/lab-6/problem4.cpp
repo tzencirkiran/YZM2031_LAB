@@ -30,6 +30,7 @@ public:
             auto it_val = val_comp.find(num);
             if (comp == num && it_val == val_comp.end()) {
                 val_comp[num] = {idx, idx};
+                idx++;
                 continue;
             }
             else if (it_val == val_comp.end()) {
@@ -41,13 +42,16 @@ public:
 
             if (it_comp == val_comp.end()) {
                 val_comp[num] = {idx, -1};
-                val_comp[comp] = {-1, comp};
+                val_comp[comp] = {-1, idx};
             }
             else {
                 val_comp[num].second = val_comp[comp].first;
                 val_comp[comp].second = val_comp[num].first;
             }
-            idx++;
+
+            if (val_comp[num].first == -1 || val_comp[num].second == -1)
+                idx++;
+            else return val_comp[num];
         }
         
         return {-1, -1};  // placeholder
