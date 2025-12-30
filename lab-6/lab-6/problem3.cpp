@@ -11,6 +11,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <list>
 
 using namespace std;
 
@@ -30,7 +31,12 @@ private:
     // Compute a hash of the file content
     long long hashContent(const string& content) {
         // TODO: Implement content hashing
-        return 0;  // placeholder
+        int sum = 0;
+        for (char c : content) {
+            sum += (c % MOD);
+        }
+        sum = sum % MOD;
+        return sum;  
     }
 
 public:
@@ -38,7 +44,16 @@ public:
     // Returns the number of duplicate groups found
     int findDuplicates(const vector<File>& files) {
         // TODO: Implement duplicate detection using hash map
-        return 0;  // placeholder
+        int dup_groups = 0;
+        vector<list<File>> hash_groups(MOD);
+        for (File f : files) {
+            long long hash_val = hashContent(f.content);
+            hash_groups[hash_val].push_back(f);
+            if (hash_groups[hash_val].size() == 2) {
+                dup_groups++;
+            }
+        }
+        return dup_groups;  // placeholder
     }
     
     // Verify if two files are actually duplicates (exact content match)
