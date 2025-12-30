@@ -40,7 +40,8 @@ public:
                     if (num_comp[num].first == -1) num_comp[num].first = idx;
                     num_comp[num].second = num_comp[complement].first;  
                     num_comp[complement].second = num_comp[num].first;
-                    return num_comp[num];
+                    if (num_comp[num].first == num_comp[num].second) continue;
+                    else return num_comp[num];
                 }
             }
             else {  // initialize num in the table as key with {idx, -1}
