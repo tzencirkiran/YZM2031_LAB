@@ -92,6 +92,9 @@ public:
             }
         }
 
+        if (distances.find(end) == distances.end()) {
+            return {};
+        }
         int d = distances[end];
         vector<string> path(d + 1);
         string current_node = end;
