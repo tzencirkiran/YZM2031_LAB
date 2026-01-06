@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <vector>
+#include <stack>
 
 using namespace std;
 
@@ -25,6 +26,16 @@ private:
         return x >= 0 && x < rows && y >= 0 && y < cols && 
                grid[x][y] == 1 && !visited[x][y];
     }
+
+    pair<int, int> valid_pos(int x, int y, int rows, int cols, 
+                const vector<vector<int>>& grid, 
+                vector<vector<bool>>& visited) {
+        
+        if (isValid(x, y, rows, cols, grid, visited)) {
+            return {x, y};
+        }
+        else return {-1, -1};
+    }
     
     // DFS to mark all cells of an island as visited
     // Starting from cell (x, y), visit all connected land cells
@@ -32,6 +43,27 @@ private:
              const vector<vector<int>>& grid,
              vector<vector<bool>>& visited) {
         // TODO: Implement DFS
+        const int n_dir[4] = {0, 1, 2, 3};
+        stack<pair<int, int>> s;
+        pair<int, int> start_pos = {x, y};
+        s.push(start_pos);
+        
+        while (!s.empty()) {
+            pair<int, int> current_pos = s.top(); s.pop();
+            int n_x, n_y;
+
+            if (visited[current_pos.first][current_pos.second] == false) {
+                visited[current_pos.first][current_pos.second] = true;
+                for (int d = 0; d <=3; d++) {   // push all unvisited neighbours
+                    n_x = current_pos.first + dx[n_dir[d]];
+                    n_y = current_pos.second + dy[n_dir[d]];
+                    if (isValid(n_x, n_y, rows, cols, grid, visited)) {
+                        s.push({n_x,n_y});
+                    }
+                }
+            }
+        }
+
     }
 
 public:
@@ -46,8 +78,26 @@ public:
         vector<vector<bool>> visited(rows, vector<bool>(cols, false));
         
         int islandCount = 0;
+        int visit_count = 0;
+        const int box_count = rows * cols;
         
         // TODO: Implement island counting
+        pair<int, int> pos = {0,0};
+        dfs(pos.first, pos.second, rows, cols, grid, visited);
+        int x = pos.first; int y = pos.second; // y holds where land starts current_y where land is the seen for each row.
+        while (visit_count < box_count) {
+            int current_y = y;
+            int current_x = x;
+            int leftmost = current_x; // leftmost land's y (ie column idx) for the next row (for now ignore)
+            while (visited[current_x][current_y] != false) {
+                current_y++;
+                visit_count++;
+                if (visited[current_x][current_y] == false) {   // move next row (x++)
+                    current_x++;
+                }
+            }
+            islandCount++;
+        }
         
         return islandCount;  // placeholder
     }
