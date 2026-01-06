@@ -21,6 +21,10 @@ private:
     // Adjacency list: user -> list of friends (undirected graph)
     unordered_map<string, vector<string>> adjList;
 
+    pair<string, bool> pair_s(const string& s, bool visited=false) {
+        return {s, visited};
+    }
+
 public:
     // Add a user to the network
     void addUser(const string& user) {
@@ -57,10 +61,48 @@ public:
         }
         
         // TODO: Implement BFS
-        
-        return {};  // placeholder
+        // For each vertex v of the graph, go to each neighbour of the v, mark v as visited
+        // each v and its neighbours will be added to the queee, if all neighbours of v traversed
+        // v will be popped from the queue
+        // repeat untill all nodes in the graph has been traversed (no node left in queueu)
+        queue<string> q;
+        unordered_map<string, bool> visited;
+        unordered_map<string, int> distances;
+        unordered_map<string, string> parents;
+
+        q.push(start);
+        visited.insert(pair_s(start, true));
+        parents[start] = start;
+        distances[start] = 0;
+
+        while (!q.empty()) {
+            string current_v = q.front();
+            q.pop();
+            visited[current_v] = true;
+            
+
+            // for each neighbour of current_v
+            for (string n_v : adjList[current_v]) {
+                if (visited[n_v] == false) {
+                    visited[n_v] == true;
+                    q.push(n_v);
+                    parents[n_v] = current_v;
+                    distances[n_v] = distances[current_v] + 1;
+                }
+            }
+        }
+
+        int d = distances[end];
+        vector<string> path(d + 1);
+        string current_node = end;
+        for (d; d >= 0; d--) {
+            path[d] = current_node;
+            current_node = parents[current_node];
+        }
+
+        return path;  // placeholder
     }
-    
+
     // Get the distance (number of hops) between two users
     // Returns -1 if no path exists
     int getDistance(const string& start, const string& end) {
