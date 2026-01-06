@@ -36,10 +36,30 @@ public:
     // Fills 'order' with a valid course ordering
     bool canFinish(vector<int>& order) {
         order.clear();
+        queue<int> q;
+        vector<int> inDegree_cpy = inDegree;
         
         // TODO: Implement Kahn's Algorithm
-        
-        return false;  // placeholder
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegree_cpy[i] == 0) {
+                q.push(i);
+            }
+        }
+
+        while (!q.empty()) {
+            int u = q.front();
+            q.pop();
+            order.push_back(u);
+
+            for (int v : adjList[u]) {
+                inDegree_cpy[v]--;
+                if (inDegree_cpy[v] == 0) {
+                    q.push(v);
+                }
+            }
+        }
+
+        return (int)order.size() == numCourses;  // placeholder
     }
     
     // Get the minimum number of semesters to complete all courses
