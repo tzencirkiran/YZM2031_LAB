@@ -34,6 +34,7 @@ public:
     // If user already exists, do nothing
     void addUser(int userId) {
         // Implement this
+        users.insert(userId);
     }
     
     // User1 follows User2 (creates directed edge from user1 to user2)
@@ -41,30 +42,56 @@ public:
     // If already following, do nothing
     void follow(int userId1, int userId2) {
         // Implement this
+        if (userId1 == userId2) return;
+
+        users.insert(userId1);
+        users.insert(userId2);
+
+        following[userId1].insert(userId2);
+        followers[userId2].insert(userId1);        
     }
     
     // User1 unfollows User2
     // If not following, do nothing
     void unfollow(int userId1, int userId2) {
         // Implement this
+        if (users.find(userId1) == users.end() || users.find(userId2) == users.end()) {
+            cout << "Either user_1 or user_2 does not exist!" << endl;
+            return;
+        }
+        following[userId1].erase(userId2);
+        followers[userId2].erase(userId1);        
     }
     
     // Get all users who follow the given user
     vector<int> getFollowers(int userId) {
         // Implement this
-        return {};  // placeholder
+        vector<int> user_followers;
+        for (auto it = followers[userId].begin(); it != followers[userId].end(); it++) {
+            user_followers.push_back(*it);
+        }
+
+        return user_followers;  // placeholder
     }
     
     // Get all users the given user follows
     vector<int> getFollowing(int userId) {
         // Implement this
-        return {};  // placeholder
+        vector<int> user_following;
+        for (auto it = following[userId].begin(); it != following[userId].end(); it++) {
+            user_following.push_back(*it);
+        }
+
+        return user_following;  // placeholder
     }
     
     // Check if userId1 follows userId2
     bool isFollowing(int userId1, int userId2) {
         // Implement this
-        return false;  // placeholder
+        if (following[userId1].find(userId2) != following[userId1].end()){ 
+            return true;
+        }
+        else return false;
     }
     
     // Get the number of users in the network
